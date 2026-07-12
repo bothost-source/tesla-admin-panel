@@ -1,0 +1,43 @@
+.dashboard-card{
+
+    background:#fff;
+
+    padding:20px;
+
+    border-radius:15px;
+
+    box-shadow:0 5px 18px rgba(0,0,0,.08);
+
+    margin-bottom:20px;
+
+}
+
+.dashboard-card h4{
+
+    font-weight:bold;
+
+}
+
+.form-label{
+
+    font-weight:500;
+
+}
+
+.form-control{
+
+    border-radius:10px;
+
+}
+
+.form-check{
+
+    padding:12px 0;
+
+}
+
+.btn{
+
+    border-radius:10px;
+
+}

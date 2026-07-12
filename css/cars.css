@@ -1,0 +1,63 @@
+.stat-card{
+
+    background:#fff;
+
+    border-radius:15px;
+
+    padding:20px;
+
+    box-shadow:0 5px 18px rgba(0,0,0,.08);
+
+}
+
+.stat-card p{
+
+    color:#888;
+
+    margin:0;
+
+}
+
+.stat-card h2{
+
+    font-weight:bold;
+
+    margin-top:5px;
+
+}
+
+.stat-icon{
+
+    font-size:35px;
+
+    color:#dc3545;
+
+}
+
+.dashboard-card{
+
+    background:#fff;
+
+    border-radius:15px;
+
+    padding:20px;
+
+    box-shadow:0 5px 18px rgba(0,0,0,.08);
+
+}
+
+.table img{
+
+    width:70px;
+
+    height:45px;
+
+    object-fit:cover;
+
+}
+
+.table tbody tr:hover{
+
+    background:#f8f9fa;
+
+}

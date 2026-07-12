@@ -1,0 +1,45 @@
+.stat-card{
+
+    background:#fff;
+
+    border-radius:15px;
+
+    padding:20px;
+
+    box-shadow:0 5px 18px rgba(0,0,0,.08);
+
+}
+
+.stat-card p{
+
+    margin:0;
+
+    color:#777;
+
+}
+
+.stat-card h2{
+
+    margin-top:8px;
+
+    font-weight:bold;
+
+}
+
+.dashboard-card{
+
+    background:#fff;
+
+    padding:20px;
+
+    border-radius:15px;
+
+    box-shadow:0 5px 18px rgba(0,0,0,.08);
+
+}
+
+.table tbody tr:hover{
+
+    background:#f8f9fa;
+
+}

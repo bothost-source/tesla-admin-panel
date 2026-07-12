@@ -1,0 +1,475 @@
+/* ==========================================
+   TESLA MOTORS ADMIN PANEL
+   DASHBOARD
+========================================== */
+
+.dashboard{
+
+    display:flex;
+
+    min-height:100vh;
+
+    background:#f5f7fb;
+
+}
+
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar{
+
+    width:270px;
+
+    background:#ffffff;
+
+    border-right:1px solid #ececec;
+
+    display:flex;
+
+    flex-direction:column;
+
+    padding:25px;
+
+}
+
+
+/* =========================
+   LOGO
+========================= */
+
+.sidebar-header{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    margin-bottom:45px;
+
+}
+
+.sidebar-logo{
+
+    width:50px;
+
+}
+
+.sidebar-header h4{
+
+    margin:0;
+
+    font-weight:800;
+
+    color:#111827;
+
+}
+
+
+/* =========================
+   MENU
+========================= */
+
+.sidebar-menu{
+
+    list-style:none;
+
+    padding:0;
+
+    margin:0;
+
+}
+
+.sidebar-menu li{
+
+    margin-bottom:10px;
+
+}
+
+.sidebar-menu li a{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+    padding:14px 18px;
+
+    border-radius:14px;
+
+    color:#4b5563;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+    transition:.3s;
+
+}
+
+
+/* Hover */
+
+.sidebar-menu li a:hover{
+
+    background:#fff1f2;
+
+    color:#E82127;
+
+}
+
+
+/* Active */
+
+.sidebar-menu .active a{
+
+    background:#E82127;
+
+    color:#ffffff;
+
+}
+
+
+/* Icons */
+
+.sidebar-menu i{
+
+    font-size:20px;
+
+}
+
+
+/* =========================
+   MAIN CONTENT
+========================= */
+
+.main-content{
+
+    flex:1;
+
+    padding:35px;
+
+}
+
+
+/* =========================
+   TOPBAR
+========================= */
+
+.topbar{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:35px;
+
+}
+
+.page-title{
+
+    font-size:30px;
+
+    font-weight:700;
+
+    margin:0;
+
+    color:#111827;
+
+}
+
+.page-subtitle{
+
+    color:#6b7280;
+
+    margin-top:6px;
+
+}
+
+.topbar-right{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+}
+
+/* Search */
+
+.search-box{
+
+    display:flex;
+
+    align-items:center;
+
+    background:#ffffff;
+
+    border:1px solid #ececec;
+
+    border-radius:14px;
+
+    padding:0 16px;
+
+    height:50px;
+
+}
+
+.search-box input{
+
+    border:none;
+
+    outline:none;
+
+    margin-left:10px;
+
+    background:transparent;
+
+    width:220px;
+
+}
+
+/* Notification */
+
+.icon-btn{
+
+    width:50px;
+
+    height:50px;
+
+    border:none;
+
+    border-radius:14px;
+
+    background:#ffffff;
+
+    transition:.3s;
+
+}
+
+.icon-btn:hover{
+
+    background:#E82127;
+
+    color:#ffffff;
+
+}
+
+/* Admin */
+
+.admin-profile{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+.admin-profile img{
+
+    width:48px;
+
+    height:48px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+}
+
+.admin-profile h6{
+
+    margin:0;
+
+    font-weight:700;
+
+}
+
+.admin-profile small{
+
+    color:#6b7280;
+
+}
+
+
+
+
+/* =========================
+   STATISTICS
+========================= */
+
+.stat-card{
+
+    background:#ffffff;
+
+    border-radius:20px;
+
+    padding:25px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    border:1px solid #ececec;
+
+    transition:.3s;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.04);
+
+}
+
+.stat-card:hover{
+
+    transform:translateY(-6px);
+
+    box-shadow:0 18px 40px rgba(0,0,0,.08);
+
+}
+
+.stat-card p{
+
+    margin:0;
+
+    color:#6b7280;
+
+    font-weight:600;
+
+}
+
+.stat-card h2{
+
+    margin-top:8px;
+
+    font-size:34px;
+
+    font-weight:800;
+
+    color:#111827;
+
+}
+
+.stat-icon{
+
+    font-size:42px;
+
+    color:#E82127;
+
+}
+
+
+
+/* =========================
+   DASHBOARD CARDS
+========================= */
+
+.dashboard-card{
+
+    background:#ffffff;
+
+    border:1px solid #ececec;
+
+    border-radius:20px;
+
+    padding:24px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.04);
+
+}
+
+.card-header-custom{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:20px;
+
+}
+
+.card-header-custom h4{
+
+    margin:0;
+
+    font-weight:700;
+
+}
+
+.view-all{
+
+    text-decoration:none;
+
+    color:#E82127;
+
+    font-weight:600;
+
+}
+
+.table th{
+
+    color:#6b7280;
+
+    font-weight:700;
+
+}
+
+/* =========================
+   LIVE CHAT
+========================= */
+
+.chat-preview{
+
+    min-height:280px;
+
+}
+
+.chat-user{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+}
+
+.chat-user h6{
+
+    margin:0;
+
+    font-weight:700;
+
+}
+
+.chat-user small{
+
+    color:#6b7280;
+
+}
+
+.status{
+
+    width:12px;
+
+    height:12px;
+
+    border-radius:50%;
+
+}
+
+.online{
+
+    background:#22c55e;
+
+}
