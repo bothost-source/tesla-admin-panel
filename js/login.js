@@ -1,4 +1,4 @@
-const ACCESS_CODE = "YAHOO_BOI123";
+const ACCESS_CODE = "TESLA-ADMIN";
 
 document
     .getElementById("loginForm")
