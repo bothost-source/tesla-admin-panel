@@ -15,7 +15,11 @@ document.addEventListener("DOMContentLoaded", () => {
         appId: "1:851073603330:web:ce1ce7b713fe107dbd941b"
     };
 
-    firebase.initializeApp(firebaseConfig);
+    try {
+        firebase.initializeApp(firebaseConfig);
+    } catch (e) {
+        console.log("Firebase already initialized");
+    }
     const db = firebase.database();
 
     // ===== CONFIG =====
@@ -34,11 +38,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const chatHeader = document.querySelector(".chat-header h5");
     const chatStatus = document.querySelector(".chat-header .text-success");
 
-    if (!input || !sendBtn || !messagesEl) return;
+    if (!input || !sendBtn || !messagesEl) {
+        console.error("Missing chat DOM elements");
+        return;
+    }
 
     // ===== STATE =====
     let currentConvo = USER_ID;
     let allMessages = [];
+    let messageKeys = {}; // Map from array index to Firebase key
     window.currentConvoId = currentConvo;
 
     // ===== HELPERS =====
@@ -54,9 +62,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function getUniqueConvos() {
         const map = new Map();
-        allMessages.forEach(m => {
+        allMessages.forEach((m, idx) => {
             if (!map.has(m.convo)) {
-                map.set(m.convo, { id: m.convo, lastMsg: m, count: 0 });
+                map.set(m.convo, { id: m.convo, lastMsg: m, count: 0, key: messageKeys[idx] });
             }
             if (m.from === "user" && !m.read) {
                 map.get(m.convo).count++;
@@ -85,13 +93,14 @@ document.addEventListener("DOMContentLoaded", () => {
             messagesEl.innerHTML = `
                 <div style="text-align:center;padding:40px 20px;color:#64748b;">
                     <i class="bi bi-chat-dots" style="font-size:2rem;margin-bottom:10px;display:block;"></i>
-                    <p style="margin:0;font-size:.9rem;">No messages yet.<br>Send a message to start the conversation.</p>
+                    <p style="margin:0;font-size:.9rem;">No messages yet.<br>Select a conversation or wait for users to message.</p>
                 </div>
             `;
         } else {
             msgs.forEach(msg => {
                 const div = document.createElement("div");
                 div.className = "message " + (msg.from === "admin" ? "sent" : "received");
+                div.style.animation = "fadeInMsg .3s ease";
                 div.innerHTML = `
                     <div class="message-content">
                         <p>${escapeHtml(msg.text)}</p>
@@ -104,23 +113,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
         messagesEl.scrollTop = messagesEl.scrollHeight;
 
-        // Mark user messages as read
-        let changed = false;
-        allMessages.forEach(m => {
-            if (m.convo === currentConvo && m.from === "user" && !m.read) {
-                m.read = true;
-                changed = true;
-            }
-        });
-        if (changed) {
+        // Mark user messages as read in Firebase
+        db.ref(MESSAGES_REF).once("value", (snap) => {
+            const data = snap.val();
+            if (!data) return;
             const updates = {};
-            allMessages.forEach((m, idx) => {
-                if (m.convo === currentConvo && m.from === "user") {
-                    // We need to find the Firebase key for this message
-                    // This is a simplified approach - in production you'd track keys
+            Object.entries(data).forEach(([key, msg]) => {
+                if (msg.convo === currentConvo && msg.from === "user" && !msg.read) {
+                    updates[`${MESSAGES_REF}/${key}/read`] = true;
                 }
             });
-        }
+            if (Object.keys(updates).length > 0) {
+                db.ref().update(updates).catch(() => {});
+            }
+        });
     }
 
     // ===== RENDER CONVERSATION LIST =====
@@ -129,22 +135,33 @@ document.addEventListener("DOMContentLoaded", () => {
         const convos = getUniqueConvos();
         convoList.innerHTML = "";
 
+        if (convos.length === 0 || (convos.length === 1 && convos[0].id === USER_ID && !convos[0].lastMsg)) {
+            convoList.innerHTML = `
+                <div style="text-align:center;padding:30px 20px;color:#64748b;">
+                    <i class="bi bi-inbox" style="font-size:1.5rem;display:block;margin-bottom:8px;"></i>
+                    <p style="margin:0;font-size:.8rem;">No conversations yet.<br>Users will appear here when they message.</p>
+                </div>
+            `;
+            return;
+        }
+
         convos.forEach(c => {
             const initials = c.id.replace("user_", "").slice(0, 2).toUpperCase();
             const name = c.id === USER_ID ? "You (Test)" : "User " + initials;
             const isActive = c.id === currentConvo;
-            const preview = c.lastMsg ? c.lastMsg.text.slice(0, 30) + (c.lastMsg.text.length > 30 ? "..." : "") : "No messages yet";
+            const preview = c.lastMsg ? c.lastMsg.text.slice(0, 28) + (c.lastMsg.text.length > 28 ? "..." : "") : "No messages";
 
             const div = document.createElement("div");
             div.className = "conversation" + (isActive ? " active" : "");
+            div.style.cssText = "cursor:pointer;transition:background .2s;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.03);display:flex;align-items:center;gap:12px;";
             div.onclick = () => switchConvo(c.id);
             div.innerHTML = `
-                <div class="avatar">${initials}</div>
-                <div class="conversation-info">
-                    <h6>${escapeHtml(name)}</h6>
-                    <small>${escapeHtml(preview)}</small>
+                <div class="avatar" style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#e82127,#ff6b6b);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;flex-shrink:0;">${initials}</div>
+                <div class="conversation-info" style="flex:1;min-width:0;">
+                    <h6 style="margin:0;color:#fff;font-size:.9rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(name)}</h6>
+                    <small style="color:#94a3b8;font-size:.75rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;">${escapeHtml(preview)}</small>
                 </div>
-                ${c.count > 0 ? `<span class="badge bg-danger">${c.count}</span>` : ""}
+                ${c.count > 0 ? `<span class="badge bg-danger" style="flex-shrink:0;font-size:.7rem;">${c.count}</span>` : ""}
             `;
             convoList.appendChild(div);
         });
@@ -196,8 +213,12 @@ document.addEventListener("DOMContentLoaded", () => {
     function initFirebaseListener() {
         db.ref(MESSAGES_REF).on("value", (snapshot) => {
             const data = snapshot.val();
+            messageKeys = {};
             if (data) {
-                allMessages = Object.values(data);
+                allMessages = Object.entries(data).map(([key, val], idx) => {
+                    messageKeys[idx] = key;
+                    return val;
+                });
             } else {
                 allMessages = [];
             }
@@ -219,3 +240,30 @@ document.addEventListener("DOMContentLoaded", () => {
     renderConvoList();
     input.focus();
 });
+
+// Admin helper functions (global)
+window.clearCurrentChat = function() {
+    if (!confirm("Clear this conversation?")) return;
+    const db = firebase.database();
+    const MESSAGES_REF = "tesla_chat_messages";
+    if (window.currentConvoId) {
+        db.ref(MESSAGES_REF).once("value", (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                const updates = {};
+                Object.entries(data).forEach(([key, msg]) => {
+                    if (msg.convo === window.currentConvoId) {
+                        updates[`${MESSAGES_REF}/${key}`] = null;
+                    }
+                });
+                db.ref().update(updates);
+            }
+        });
+    }
+};
+
+window.clearAllChats = function() {
+    if (!confirm("Clear ALL conversations? This cannot be undone.")) return;
+    firebase.database().ref("tesla_chat_messages").remove();
+};
+
